@@ -3,19 +3,20 @@
 # Purpose:     Label object bboxes for ImageNet Detection data
 # Author:      Qiushi
 # Created:     06/06/2014
-
-#
 #-------------------------------------------------------------------------------
+
 from __future__ import division
 
 try:
     # for Python2
     from Tkinter import *   ## notice capitalized T in Tkinter 
     import tkMessageBox
+    from Tkinter import filedialog
 except ImportError:
     # for Python3
     from tkinter import * 
-    import tkinter.messagebox
+    from tkinter import messagebox
+    from tkinter import filedialog
 
 
 from PIL import Image, ImageTk
@@ -66,7 +67,8 @@ class LabelTool():
         # dir entry & load
         self.label = Label(self.frame, text = "Image Dir:")
         self.label.grid(row = 0, column = 0, sticky = E)
-        self.entry = Entry(self.frame)
+        self.entry_text = StringVar()
+        self.entry = Entry(self.frame,textvariable=self.entry_text)
         self.entry.grid(row = 0, column = 1, sticky = W+E)
         self.ldBtn = Button(self.frame, text = "Load", command = self.loadDir)
         self.ldBtn.grid(row = 0, column = 2, sticky = W+E)
@@ -124,59 +126,33 @@ class LabelTool():
         self.frame.columnconfigure(1, weight = 1)
         self.frame.rowconfigure(4, weight = 1)
 
-        # for debugging
-##        self.setImage()
-##        self.loadDir()
+
 
     def loadDir(self, dbg = False):
-        if not dbg:
-            s = self.entry.get()
-            self.parent.focus()
-            self.category = int(s)
-        else:
-            s = './Images/003/'
-##        if not os.path.isdir(s):
-##            tkMessageBox.showerror("Error!", message = "The specified dir doesn't exist!")
-##            return
-        # get image list
-        print(self.category)
-        self.imageDir = os.path.join(r'./Images', '%03d' %(self.category))
-        print(self.imageDir)
-        self.imageList = glob.glob(os.path.join(self.imageDir, '*.jpg'))
-        if len(self.imageList) == 0:
-            print ('No .jpg images found in the specified dir!')
-            return
+        self.imageDir =  filedialog.askdirectory(initialdir = "./", title = "Select an image folder")
+        if self.imageDir != None:
+            self.entry_text.set(self.imageDir)
+            self.imageList = glob.glob(os.path.join(self.imageDir, '*.jpeg'))
+            if len(self.imageList) == 0:
+                self.entry_text.set("")
+                messagebox.showinfo("Error", "No .jpg images found in the specified dir!")
+                return
 
-        # default to the 1st image in the collection
-        self.cur = 1
-        self.total = len(self.imageList)
+            # default to the 1st image in the collection
+            self.cur = 1
+            self.total = len(self.imageList)
 
-         # set up output dir
-        self.outDir = os.path.join(r'./Labels', '%03d' %(self.category))
-        if not os.path.exists(self.outDir):
-            os.mkdir(self.outDir)
+             # set up output dir
+            self.outDir = os.path.join(r'./Labels', '%s' %(os.path.basename(os.path.normpath(self.imageDir))))
+            if not os.path.exists(self.outDir):
+                if not os.path.exists("Labels"):
+                    os.mkdir("Labels")
+                os.mkdir(self.outDir)
 
-        # load example bboxes
-        self.egDir = os.path.join(r'./Examples', '001')
-        #self.egDir = os.path.join(r'./Examples', '%03d' %(self.category))
-        if not os.path.exists(self.egDir):
-            return
-        filelist = glob.glob(os.path.join(self.egDir, '*.jpg'))
-        self.tmp = []
-        self.egList = []
-        random.shuffle(filelist)
-        for (i, f) in enumerate(filelist):
-            if i == 3:
-                break
-            im = Image.open(f)
-            r = min(SIZE[0] / im.size[0], SIZE[1] / im.size[1])
-            new_size = int(r * im.size[0]), int(r * im.size[1])
-            self.tmp.append(im.resize(new_size, Image.ANTIALIAS))
-            self.egList.append(ImageTk.PhotoImage(self.tmp[-1]))
-            self.egLabels[i].config(image = self.egList[-1], width = SIZE[0], height = SIZE[1])
 
-        self.loadImage()
-        print ('%d images loaded from %s' %(self.total, s))
+            self.loadImage()
+            print ('%d images loaded from %s' %(self.total, self.imageDir))
+
 
     def loadImage(self):
         # load image
@@ -292,12 +268,6 @@ class LabelTool():
             self.cur = idx
             self.loadImage()
 
-##    def setImage(self, imagepath = r'test2.png'):
-##        self.img = Image.open(imagepath)
-##        self.tkimg = ImageTk.PhotoImage(self.img)
-##        self.mainPanel.config(width = self.tkimg.width())
-##        self.mainPanel.config(height = self.tkimg.height())
-##        self.mainPanel.create_image(0, 0, image = self.tkimg, anchor=NW)
 
 if __name__ == '__main__':
     root = Tk()

@@ -132,7 +132,7 @@ class LabelTool():
         self.imageDir =  filedialog.askdirectory(initialdir = "./", title = "Select an image folder")
         if self.imageDir != None:
             self.entry_text.set(self.imageDir)
-            self.imageList = glob.glob(os.path.join(self.imageDir, '*.jpeg'))
+            self.imageList = glob.glob(os.path.join(self.imageDir, '*.jpg'))
             if len(self.imageList) == 0:
                 self.entry_text.set("")
                 messagebox.showinfo("Error", "No .jpg images found in the specified dir!")

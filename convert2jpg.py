@@ -4,12 +4,11 @@ import os
 import cv2
 
 imageSize = (800,600)
-
-imagePaths = "Images/001/*.*"
+imagePath = "Images/001/*.*"
 datasetOutput = "dataset"
 
 
-imagelist = glob.glob(imagePaths)
+imagelist = glob.glob(imagePath)
 
 
 def imageResize(im, width = None, height = None, inter = cv2.INTER_AREA):

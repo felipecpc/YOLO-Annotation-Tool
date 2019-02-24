@@ -1,27 +1,38 @@
-# YOLO-Annotation-Tool
-## This is for creating the training set of images for YOLO
+# YOLO-Tools
 
-###### Commands on terminal:
+Useful scripts to prepare a testing dataset.
+
+## Convert to jpg
+This script will convert the images in a given folder to jpg and also resize it. 
+
 ```
-git clone https://github.com/ManivannanMurugavel/YOLO-Annotation-Tool.git
-
-cd YOLO-Annotation-Tool
+imageSize = (800,600)
+imagePath = "Images/001/*.*"
+datasetOutput = "dataset"
 ```
-### Create 001 folder in Images folder and put your class one images
 
-### Convert to .JPEG from any type of images. Use this command(Ubuntu)
+ ``` python3 convert2jpg.py ```
 
-```mogrify -format jpg *.JPEG```
-or
-```mogrify -format jpg *.jpeg```
-or
-```mogrify -format jpg *.png```
+## Annotation
 
-### Run Main python script 
+### Annotation Tool
+Tool to mark the elements in the image
 
- ``` python main.py ```
+ ``` python3 annotation.py ```
+ 
 
-### Run convert python file for create final text file for yolo images 
 
-```python convert.py```
-# -------Progress-------
+### Convert to Darknet
+Take the output from annotation tool and convert to the format expected by darknet
+
+``` python3 convert2darknet.py```
+
+## Split
+Split the dataset between training and test
+
+``` python3 split.py```
+
+## Darkflow
+Convert the darknet annotation file to 
+
+``` python3 darknet2darkflow.py```

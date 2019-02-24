@@ -4,7 +4,7 @@ import os
 from os import walk, getcwd
 from PIL import Image
 
-classes = ["001","002","003","004","005","006"]
+classes = ["001"]
 
 def convert(size, box):
     dw = 1./size[0]
@@ -23,7 +23,7 @@ def convert(size, box):
 """-------------------------------------------------------------------""" 
 
 """ Configure Paths"""   
-mypath = "./Labels/001/"
+mypath = "./Labels/dataset/"
 outpath = "./Labels/output/"
 
 cls = "001"
@@ -77,7 +77,7 @@ for txt_name in txt_name_list:
                 ymax = elems[3]
                 print(elems[0])
                 #
-                img_path = str('%s/Images/%s/%s.jpg'%(wd, cls, os.path.splitext(txt_name)[0]))
+                img_path = str('%s/dataset/%s.jpg'%(wd, os.path.splitext(txt_name)[0]))
                 #t = magic.from_file(img_path)
                 #wh= re.search('(\d+) x (\d+)', t).groups()
                 im=Image.open(img_path)

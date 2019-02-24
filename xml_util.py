@@ -10,11 +10,11 @@ def createXML(filename,folder, boxes, img_size):
     annotation = etree.Element('annotation')
 
     fo = etree.Element('folder')
-    fo.text = folder.decode('UTF-8')
+    fo.text = folder
     annotation.append(fo)
 
     f = etree.Element('filename')
-    f.text = filename.decode('UTF-8')
+    f.text = filename
     annotation.append(f)
 
     size = etree.Element('size')
@@ -76,7 +76,7 @@ def createXML(filename,folder, boxes, img_size):
 
 def saveXML(xml, filename_xml):
     with open(filename_xml, "w") as file:
-        file.write(etree.tostring(xml, pretty_print=True))
+        file.write(etree.tostring(xml, pretty_print=True).decode('UTF-8'))
 
 
 def createXMLAnnotation(jpg_file, boxes, img_size, outFolder):
